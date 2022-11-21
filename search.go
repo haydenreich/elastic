@@ -33,6 +33,19 @@ type SearchService struct {
 	expandWildcards   string
 }
 
+func (s *SearchService) GetRequestBody() (body interface{}, err error) {
+	if s.source != nil {
+		body = s.source
+	} else {
+		src, err := s.searchSource.Source()
+		if err != nil {
+			return
+		}
+		body = src
+	}
+	return
+}
+
 // NewSearchService creates a new service for searching in Elasticsearch.
 func NewSearchService(client *Client) *SearchService {
 	builder := &SearchService{
